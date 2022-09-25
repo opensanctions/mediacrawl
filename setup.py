@@ -5,20 +5,20 @@ with open("README.md") as f:
 
 
 setup(
-    name="storyweb",
+    name="mediacrawl",
     version="0.0.1",
-    description="Extract actor networks from journalistic reporting.",
+    description="Crawl reporting from media web sites.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    keywords="ner spacy journalism text nlp graph entities",
+    keywords="crawler spider journalism text",
     author="Friedrich Lindenberg",
     author_email="friedrich@pudo.org",
-    url="https://github.com/opensanctions/storyweb",
+    url="https://github.com/opensanctions/mediacrawl",
     license="MIT",
     packages=find_packages(exclude=["ez_setup", "examples", "tests"]),
     namespace_packages=[],
     include_package_data=True,
-    package_data={"": ["storyweb/py.typed", "mediacrawl/py.typed"]},
+    package_data={"": ["mediacrawl/py.typed"]},
     zip_safe=False,
     install_requires=[
         "sqlalchemy[asyncio]",
