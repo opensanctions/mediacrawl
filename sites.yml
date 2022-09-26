@@ -32,6 +32,8 @@ sites:
       - https://www.icij.org/inside-icij/
     domain_concurrency: 1
     delay: 1
+    query_ignore:
+      - utm_term
     crawl:
       and:
         - or:
@@ -43,6 +45,7 @@ sites:
               - domain: medicaldevices.icij.org
               - domain: wwwmaster.icij.org
               - domain: media.icij.org
+              - domain: dev.icij.org
     parse:
       or:
         - element: .//time[@class="post-published"]
@@ -127,6 +130,10 @@ sites:
       - https://www.dailymaverick.co.za/?p=1387616
     domain_concurrency: 1
     delay: 2
+    query_ignore:
+      - utm_source
+      - utm_campaign
+      - utm_medium
     crawl:
       and:
         - or:
@@ -139,3 +146,28 @@ sites:
     parse:
       or:
         - element: .//div[@class="author-bar"]
+
+  - name: amabhungane
+    urls:
+      - https://amabhungane.org/
+      - https://amabhungane.org/stories/
+      - https://amabhungane.org/stories/page/2/
+      - https://amabhungane.org/stories/page/3/
+      - https://amabhungane.org/stories/page/4/
+    domain_concurrency: 2
+    delay: 0
+    query_ignore:
+      - utm_source
+      - utm_campaign
+      - utm_medium
+    crawl:
+      and:
+        - or:
+            - domain: amabhungane.org
+        - not:
+            or:
+              - mime: nonweb
+              - prefix: https://amabhungane.org/wp-content/uploads
+    parse:
+      or:
+        - element: .//meta[@content="article"]
