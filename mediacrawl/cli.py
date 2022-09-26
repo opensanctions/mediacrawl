@@ -26,7 +26,7 @@ def async_command(f):
     return wrapper
 
 
-@click.group(help="Storyweb CLI")
+@click.group(help="Media crawler CLI")
 def cli() -> None:
     logging.basicConfig(level=logging.INFO)
 

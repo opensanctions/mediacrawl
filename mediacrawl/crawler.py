@@ -1,6 +1,6 @@
 import asyncio
 import logging
-from asyncio import Queue
+from asyncio import CancelledError, Queue
 from typing import List, Set
 from aiohttp import ClientSession, TCPConnector
 from aiohttp.client import ClientTimeout
@@ -25,6 +25,7 @@ class Crawler(object):
                 page = await self.queue.get()
 
                 # TODO: use hashes?
+                print("URL", page.url, page.url in self.seen)
                 if page.url in self.seen:
                     self.queue.task_done()
                     continue
@@ -42,8 +43,8 @@ class Crawler(object):
         for site in self.sites:
             if len(sites) and site.config.name not in sites:
                 continue
-            for page in site.seeds():
-                await self.queue.put(page)
+            for seed_task in site.seeds():
+                await self.queue.put(seed_task)
 
         headers = {"User-Agent": self.config.user_agent}
         timeout = ClientTimeout(10)
@@ -51,7 +52,7 @@ class Crawler(object):
         async with ClientSession(
             headers=headers, timeout=timeout, connector=connector
         ) as session:
-            tasks: List[asyncio.Task[None]] = []
+            tasks: List[asyncio.Task[Task]] = []
             for _ in range(self.config.concurrency):
                 task = asyncio.create_task(self.worker(session))
                 tasks.append(task)
@@ -59,4 +60,7 @@ class Crawler(object):
             await self.queue.join()
             for task in tasks:
                 task.cancel()
-            await asyncio.gather(*tasks, return_exceptions=True)
+            resp = await asyncio.gather(*tasks, return_exceptions=True)
+            for exc in resp:
+                if not isinstance(exc, CancelledError):
+                    log.error("Collected error: %r" % exc)

@@ -13,7 +13,6 @@ from mediacrawl.config import SiteConfig
 from mediacrawl.page import Page
 from mediacrawl.db import engine
 
-logging.getLogger("trafilatura").setLevel(logging.WARNING)
 log = logging.getLogger(__name__)
 
 
@@ -45,7 +44,7 @@ class Parser(object):
 
     async def parse(self, page: Page) -> Optional[Article]:
         article = Article(
-            id=page.url.id(),
+            id=page.url.id,
             url=page.url.url,
             title=page.url.url,
             site=page.site,

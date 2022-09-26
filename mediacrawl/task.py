@@ -25,7 +25,7 @@ class Task(object):
             return
         url = url.clean()
 
-        # Check url-based rules only:
+        # Check url-based rules only:)
         if not self.check_crawl(url, None):
             return
 
@@ -88,14 +88,14 @@ class Task(object):
         page.content = content
 
     async def crawl(self, http: ClientSession) -> None:
-        if self.url not in self.site.config.urls:
-            async with db_connect() as conn:
-                cached = await Page.find(conn, self.url)
-                if cached is not None:
-                    # log.info("Cache hit: %r", cached.url)
-                    await self.handle_page(cached)
-                    await cached.update_parse(conn)
-                    return
+        # if self.url not in self.site.config.urls:
+        #     async with db_connect() as conn:
+        #         cached = await Page.find(conn, self.url)
+        #         if cached is not None:
+        #             # log.info("Cache hit: %r", cached.url)
+        #             await self.handle_page(cached)
+        #             await cached.update_parse(conn)
+        #             return
 
         if self.site.is_delay_locked(self.url):
             # log.info("Putting %r back on the queue", self)

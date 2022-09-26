@@ -1,12 +1,10 @@
+from lxml import html
 from datetime import datetime
 from functools import cached_property
-from operator import or_
 from typing import AsyncGenerator, Optional
 from pydantic import BaseModel, validator
 from aiohttp import ClientResponse
-from lxml import html
-from sqlalchemy import or_
-from sqlalchemy import update
+from sqlalchemy import or_, update
 from sqlalchemy.future import select
 
 from mediacrawl.url import URL
@@ -23,7 +21,6 @@ class Page(BaseModel):
     retrieved: bool = False
     status: Optional[int] = None
     timestamp: datetime
-    # headers: Optional[str] = None
     content_type: Optional[str] = None
     charset: Optional[str] = None
     content: Optional[bytes] = None
@@ -52,7 +49,6 @@ class Page(BaseModel):
             method=resp.method,
             ok=resp.ok,
             status=resp.status,
-            # headers=CIMultiDict(resp.headers.items()),
             content_type=resp.content_type,
             charset=resp.charset,
             timestamp=datetime.utcnow(),

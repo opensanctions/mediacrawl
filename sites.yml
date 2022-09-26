@@ -117,3 +117,25 @@ sites:
     parse:
       or:
         - element: .//div[@class="article-info"]
+
+  - name: daily_maverick
+    urls:
+      - https://www.dailymaverick.co.za/
+      - https://www.dailymaverick.co.za/author/amabhungane/
+      - https://www.dailymaverick.co.za/section/scorpio/
+      - https://www.dailymaverick.co.za/about/
+      - https://www.dailymaverick.co.za/?p=1387616
+    domain_concurrency: 1
+    delay: 2
+    crawl:
+      and:
+        - or:
+            - domain: dailymaverick.co.za
+        - not:
+            or:
+              - mime: nonweb
+              - domain: shop.dailymaverick.co.za
+              - domain: revengine-tracker.remp.dailymaverick.co.za
+    parse:
+      or:
+        - element: .//div[@class="author-bar"]

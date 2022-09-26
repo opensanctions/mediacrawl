@@ -31,13 +31,12 @@ class URL(object):
         parsed = parsed._replace(netloc=parsed.netloc.lower())
         return URL(parsed.geturl())
 
+    @cached_property
     def id(self) -> str:
         parsed = self.parsed._replace(fragment="")
         parsed = parsed._replace(netloc=parsed.netloc.lower())
         parsed = parsed._replace(path=parsed.path.rstrip("/"))
-        parsed = parsed._replace(scheme=parsed.scheme.lower())
-        if parsed.scheme == "https":
-            parsed = parsed._replace(scheme="http")
+        parsed = parsed._replace(scheme="http")
         norm = parsed.geturl().encode("utf-8")
         return sha1(norm).hexdigest()
 
@@ -61,7 +60,9 @@ class URL(object):
         return self.url
 
     def __hash__(self) -> int:
-        return hash(self.url)
+        return hash(self.id)
 
     def __eq__(self, other: Any) -> bool:
+        if isinstance(other, URL):
+            return other.id == self.id
         return other == self.url
