@@ -30,6 +30,7 @@ setup(
         "articledata",
         "pantomime",
         "orjson",
+        "pyyaml",
         "trafilatura",
         "langdetect",
         "languagecodes",
