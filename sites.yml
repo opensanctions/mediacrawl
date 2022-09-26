@@ -5,6 +5,7 @@ sites:
       - https://www.occrp.org/en/investigations
       - https://www.occrp.org/en/daily
       - https://www.occrp.org/en/blog
+      - https://www.occrp.org/en/projects/
     crawl:
       and:
         - or:
@@ -134,6 +135,7 @@ sites:
       - utm_source
       - utm_campaign
       - utm_medium
+      - __cf_chl_captcha_tk__
     crawl:
       and:
         - or:
