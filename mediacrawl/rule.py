@@ -82,7 +82,7 @@ class DomainRule(UrlBaseRule):
         return False
 
 
-class PatternRule(BaseRule):
+class PatternRule(UrlBaseRule):
     pattern: str
 
     @cached_property
@@ -93,7 +93,7 @@ class PatternRule(BaseRule):
         return self.rex.match(url.url) is not None
 
 
-class PrefixRule(BaseRule):
+class PrefixRule(UrlBaseRule):
     prefix: str
 
     def check_url(self, url: URL) -> bool:
