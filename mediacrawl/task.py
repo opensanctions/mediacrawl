@@ -1,5 +1,5 @@
 import logging
-from typing import TYPE_CHECKING, Generator, Optional
+from typing import TYPE_CHECKING, Generator, Optional, Set
 from asyncio.exceptions import TimeoutError
 from aiohttp import ClientSession, ClientResponse
 from aiohttp.client_exceptions import ClientConnectionError, ClientPayloadError
@@ -49,17 +49,20 @@ class Task(object):
         return True
 
     def extract_urls(self, page: Page) -> Generator[URL, None, None]:
+        suffixes: Set[Optional[str]] = set()
         for link in page.doc.findall(".//a"):
-            next_url = link.get("href")
-            if next_url is None:
-                continue
-            yield page.url.join(next_url)
+            suffixes.add(link.get('href'))
+            
+        for frame in page.doc.findall(".//iframe"):
+            suffixes.add(frame.get('src'))
 
-        for link in page.doc.findall(".//iframe"):
-            next_url = link.get("src")
-            if next_url is None:
+        for suffix in suffixes:
+            if suffix is None:
                 continue
-            yield page.url.join(next_url)
+            next_url = page.url.join(suffix)
+            if next_url is not None:
+                yield next_url
+
 
     async def handle_page(self, page: Page) -> None:
         page.parse = False

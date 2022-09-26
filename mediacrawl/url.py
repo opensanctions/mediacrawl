@@ -1,7 +1,7 @@
 from hashlib import sha1
 from functools import cached_property
 from types import NoneType
-from typing import Any, Dict, List, Set, Tuple
+from typing import Any, Dict, List, Optional, Set, Tuple
 from urllib.parse import urlencode, urljoin, urlparse, parse_qsl
 
 
@@ -45,8 +45,11 @@ class URL(object):
         norm = parsed.geturl().encode("utf-8")
         return sha1(norm).hexdigest()
 
-    def join(self, text: str) -> "URL":
-        return URL(urljoin(self.url, text))
+    def join(self, text: str) -> Optional["URL"]:
+        try:
+            return URL(urljoin(self.url, text))
+        except (TypeError, ValueError):
+            return None
 
     @classmethod
     def __get_validators__(cls):
