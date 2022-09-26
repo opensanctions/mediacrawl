@@ -18,19 +18,23 @@ log = logging.getLogger(__name__)
 class Task(object):
     def __init__(self, site: "Site", url: URL) -> None:
         self.site = site
+        self.crawler = site.crawler
         self.url = url
 
     async def enqueue(self, url: URL) -> None:
         if url.scheme not in ["http", "https"]:
             return
-        url = url.clean()
+        url = url.clean(self.site.config.query_ignore)
 
         # Check url-based rules only:)
         if not self.check_crawl(url, None):
             return
 
+        if url in self.crawler.seen:
+            return
+        self.crawler.seen.add(url)
         task = Task(self.site, url)
-        await self.site.crawler.queue.put(task)
+        await self.crawler.queue.put(task)
 
     def check_crawl(self, url: URL, page: Optional[Page]) -> bool:
         if self.site.config.crawl is not None:
@@ -88,19 +92,21 @@ class Task(object):
         page.content = content
 
     async def crawl(self, http: ClientSession) -> None:
-        # if self.url not in self.site.config.urls:
-        #     async with db_connect() as conn:
-        #         cached = await Page.find(conn, self.url)
-        #         if cached is not None:
-        #             # log.info("Cache hit: %r", cached.url)
-        #             await self.handle_page(cached)
-        #             await cached.update_parse(conn)
-        #             return
+        if self.url not in self.site.config.urls:
+            async with db_connect() as conn:
+                cached = await Page.find(conn, self.url)
+                if cached is not None:
+                    # log.info("Cache hit: %r", cached.url)
+                    await self.handle_page(cached)
+                    await cached.update_parse(conn)
+                    return
 
-        if self.site.is_delay_locked(self.url):
-            # log.info("Putting %r back on the queue", self)
-            await self.site.crawler.queue.put(self)
-            return
+        # if self.site.is_delay_locked(self.url):
+        #     # log.info("Locked, going to wait...")
+        # #     # log.info("Putting %r back on the queue", self)
+        # #     self.site.crawler.seen.remove(self.url)
+        #     await self.site.crawler.queue.put(self)
+        #     return
 
         async with self.site.delay_url(self.url):
             try:
