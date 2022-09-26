@@ -35,6 +35,9 @@ sites:
     delay: 1
     query_ignore:
       - utm_term
+      - utm_source
+      - utm_campaign
+      - utm_medium
     crawl:
       and:
         - or:
@@ -47,6 +50,8 @@ sites:
               - domain: wwwmaster.icij.org
               - domain: media.icij.org
               - domain: dev.icij.org
+              - domain: datashare.icij.org
+              - domain: donate.icij.org
     parse:
       or:
         - element: .//time[@class="post-published"]
