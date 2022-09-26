@@ -11,6 +11,7 @@ class SiteConfig(BaseModel):
     delay: float = 0.0
     domain_concurrency: int = 10
     urls: Set[URL]
+    query_ignore: Set[str] = set()
     crawl: Optional[Rules]
     parse: Optional[Rules]
 

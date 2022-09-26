@@ -23,14 +23,6 @@ class Crawler(object):
         try:
             while True:
                 page = await self.queue.get()
-
-                # TODO: use hashes?
-                print("URL", page.url, page.url in self.seen)
-                if page.url in self.seen:
-                    self.queue.task_done()
-                    continue
-                self.seen.add(page.url)
-
                 try:
                     await page.crawl(session)
                 except Exception:
@@ -44,6 +36,7 @@ class Crawler(object):
             if len(sites) and site.config.name not in sites:
                 continue
             for seed_task in site.seeds():
+                self.seen.add(seed_task.url)
                 await self.queue.put(seed_task)
 
         headers = {"User-Agent": self.config.user_agent}

@@ -1,8 +1,8 @@
 from hashlib import sha1
 from functools import cached_property
 from types import NoneType
-from typing import Any
-from urllib.parse import urljoin, urlparse
+from typing import Any, Dict, List, Set, Tuple
+from urllib.parse import urlencode, urljoin, urlparse, parse_qsl
 
 
 class URL(object):
@@ -26,9 +26,14 @@ class URL(object):
             return "http"
         return self.parsed.scheme.lower().strip()
 
-    def clean(self) -> "URL":
+    def clean(self, query_ignore: Set[str]) -> "URL":
         parsed = self.parsed._replace(fragment="")
         parsed = parsed._replace(netloc=parsed.netloc.lower())
+        cleaned_query: List[Tuple[str, str]] = []
+        for key, value in parse_qsl(parsed.query):
+            if key not in query_ignore:
+                cleaned_query.append((key, value))
+        parsed = parsed._replace(query=urlencode(cleaned_query))
         return URL(parsed.geturl())
 
     @cached_property
