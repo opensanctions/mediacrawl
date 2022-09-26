@@ -108,7 +108,7 @@ sites:
     urls:
       - https://istories.media/
     domain_concurrency: 1
-    delay: 2
+    delay: 10
     crawl:
       and:
         - or:
