@@ -42,7 +42,7 @@ async def crawl(config: Path, sites: List[str]) -> None:
     await crawler.run(sites=sites)
 
 
-@cli.command("parse", help="Prase what has been crawled")
+@cli.command("parse", help="Parse what has been crawled")
 @click.argument("config", type=InPath)
 @click.argument("outpath", type=OutDir, default="data/articles")
 @click.option("-s", "--site", "sites", multiple=True)
