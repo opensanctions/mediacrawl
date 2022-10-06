@@ -1,7 +1,5 @@
 import orjson
 import logging
-import langdetect
-import languagecodes
 from pathlib import Path
 from io import BufferedWriter
 from typing import Dict, List, Optional
