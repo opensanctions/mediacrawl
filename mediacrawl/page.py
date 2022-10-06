@@ -104,7 +104,7 @@ class Page(BaseModel):
         cls, conn: Conn, sites: List[str] = []
     ) -> AsyncGenerator["Page", None]:
         stmt = select(page_table)
-        stmt = stmt.where(page_table.c.parse == True)
+        # stmt = stmt.where(page_table.c.parse == True)
         if len(sites):
             stmt = stmt.where(page_table.c.site.in_(sites))
         result = await conn.stream(stmt)
@@ -120,7 +120,7 @@ class Page(BaseModel):
         istmt = upsert(page_table).values([data])
         values = dict(
             ok=istmt.excluded.ok,
-            parse=istmt.excluded.ok,
+            # parse=istmt.excluded.ok,
             status=istmt.excluded.status,
             content_type=istmt.excluded.content_type,
             charset=istmt.excluded.charset,
@@ -130,8 +130,8 @@ class Page(BaseModel):
         stmt = istmt.on_conflict_do_update(index_elements=["url"], set_=values)
         await conn.execute(stmt)
 
-    async def update_parse(self, conn: Conn) -> None:
-        stmt = update(page_table)
-        stmt = stmt.where(page_table.c.url == self.url.url)
-        stmt = stmt.values({"parse": self.parse})
-        await conn.execute(stmt)
+    # async def update_parse(self, conn: Conn) -> None:
+    #     stmt = update(page_table)
+    #     stmt = stmt.where(page_table.c.url == self.url.url)
+    #     stmt = stmt.values({"parse": self.parse})
+    #     await conn.execute(stmt)

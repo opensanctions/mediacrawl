@@ -42,11 +42,11 @@ class Task(object):
                 return False
         return True
 
-    def check_parse(self, url: URL, page: Optional[Page]) -> bool:
-        if self.site.config.parse is not None:
-            if self.site.config.parse.check(url, page) is False:
-                return False
-        return True
+    # def check_parse(self, url: URL, page: Optional[Page]) -> bool:
+    #     if self.site.config.parse is not None:
+    #         if self.site.config.parse.check(url, page) is False:
+    #             return False
+    #     return True
 
     def extract_urls(self, page: Page) -> Generator[URL, None, None]:
         if page.doc is None:
@@ -66,14 +66,14 @@ class Task(object):
                 yield next_url
 
     async def handle_page(self, page: Page) -> None:
-        page.parse = False
+        # page.parse = False
         if not self.check_crawl(self.url, page):
             return
         if not page.ok:
             return
 
-        if self.check_parse(self.url, page):
-            page.parse = True
+        # if self.check_parse(self.url, page):
+        #     page.parse = True
 
         for next_url in self.extract_urls(page):
             await self.enqueue(next_url)
@@ -100,7 +100,7 @@ class Task(object):
                 if cached is not None:
                     # log.info("Cache hit: %r", cached.url)
                     await self.handle_page(cached)
-                    await cached.update_parse(conn)
+                    # await cached.update_parse(conn)
                     return
 
         # if self.site.is_delay_locked(self.url):

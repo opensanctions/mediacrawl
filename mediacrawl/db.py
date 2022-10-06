@@ -38,7 +38,7 @@ page_table = Table(
     Column("original_url", Unicode(8192), index=True),
     Column("method", Unicode(16)),
     Column("ok", Boolean),
-    Column("parse", Boolean),
+    # Column("parse", Boolean),
     Column("status", Integer),
     Column("timestamp", DateTime, nullable=False),
     Column("headers", Unicode()),
