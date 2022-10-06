@@ -20,6 +20,7 @@ sites:
               - domain: id.occrp.org
               - domain: cdn.occrp.org
               - prefix: https://www.occrp.org/images
+              - prefix: https://www.occrp.org/documents/
     parse:
       or:
         - element: .//article//li[@class="authors"]

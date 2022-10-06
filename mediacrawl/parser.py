@@ -9,6 +9,7 @@ from articledata import Article
 from trafilatura import bare_extraction
 
 from mediacrawl.config import CrawlConfig, SiteConfig
+from mediacrawl.language import detect_language
 from mediacrawl.page import Page
 from mediacrawl.db import engine
 from mediacrawl.url import URL
@@ -65,21 +66,9 @@ class Parser(object):
             if author is not None:
                 article.bylines.append(author)
 
-        # html = page.doc
-        # if html.get("lang") == "ru-RU":
-        #     print(page.url, page.charset)
-        #     print(article.text)
-        # print(html.get("lang"))
-
-        # return None
-
-        lang = langdetect.detect(article.text or page.text)
+        lang = detect_language(article.text)
         if lang is not None:
-            article.locale = lang
-            lang_long = languagecodes.iso_639_alpha3(lang)
-            if lang_long is not None:
-                article.language = lang_long
-
+            article.language = lang
         return article
 
     async def run(self, outpath: Path, sites: List[str]):

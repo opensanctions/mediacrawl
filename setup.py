@@ -32,7 +32,7 @@ setup(
         "orjson",
         "pyyaml",
         "trafilatura",
-        "langdetect",
+        "fasttext",
         "languagecodes",
         "charset-normalizer",
         "shortuuid >= 1.0.1, < 2.0.0",
