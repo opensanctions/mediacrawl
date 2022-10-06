@@ -44,7 +44,7 @@ async def crawl(config: Path, sites: List[str]) -> None:
 
 @cli.command("parse", help="Parse what has been crawled")
 @click.argument("config", type=InPath)
-@click.argument("outpath", type=OutDir, default="data/articles")
+@click.option("-o", "--outpath", "outpath", type=OutDir, default="data/articles")
 @click.option("-s", "--site", "sites", multiple=True)
 @async_command
 async def parse(config: Path, outpath: Path, sites: List[str]) -> None:

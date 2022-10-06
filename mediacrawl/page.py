@@ -104,6 +104,7 @@ class Page(BaseModel):
         cls, conn: Conn, sites: List[str] = []
     ) -> AsyncGenerator["Page", None]:
         stmt = select(page_table)
+        stmt = stmt.where(page_table.c.ok == True)
         # stmt = stmt.where(page_table.c.parse == True)
         if len(sites):
             stmt = stmt.where(page_table.c.site.in_(sites))

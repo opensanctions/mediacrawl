@@ -26,9 +26,9 @@ class Parser(object):
                 return site
         return None
 
-    def check_parse(self, page: Optional[Page]) -> bool:
+    def check_parse(self, page: Page) -> bool:
         config = self.get_site_config(page.site)
-        if config is None or page.url is None:
+        if config is None:
             return False
         if config.parse is None:
             return True
@@ -39,6 +39,7 @@ class Parser(object):
     async def parse(self, page: Page) -> Optional[Article]:
         if not self.check_parse(page):
             return None
+        log.info("Parsing: %r", page.url)
         article = Article(
             id=page.url.id,
             url=page.url.url,
@@ -70,16 +71,16 @@ class Parser(object):
         #     print(article.text)
         # print(html.get("lang"))
 
-        return None
+        # return None
 
-        # lang = langdetect.detect(article.text or page.text)
-        # if lang is not None:
-        #     article.locale = lang
-        #     lang_long = languagecodes.iso_639_alpha3(lang)
-        #     if lang_long is not None:
-        #         article.language = lang_long
+        lang = langdetect.detect(article.text or page.text)
+        if lang is not None:
+            article.locale = lang
+            lang_long = languagecodes.iso_639_alpha3(lang)
+            if lang_long is not None:
+                article.language = lang_long
 
-        # return article
+        return article
 
     async def run(self, outpath: Path, sites: List[str]):
         outpath.mkdir(parents=True, exist_ok=True)

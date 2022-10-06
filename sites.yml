@@ -152,6 +152,7 @@ sites:
               - domain: revengine-tracker.remp.dailymaverick.co.za
     parse:
       or:
+        - prefix: https://www.dailymaverick.co.za/article/
         - element: .//div[@class="author-bar"]
 
   - name: amabhungane
