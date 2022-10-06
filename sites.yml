@@ -137,8 +137,8 @@ sites:
       - https://www.dailymaverick.co.za/section/scorpio/
       - https://www.dailymaverick.co.za/about/
       - https://www.dailymaverick.co.za/?p=1387616
-    domain_concurrency: 2
-    delay: 1
+    domain_concurrency: 1
+    delay: 0
     query_ignore:
       - utm_source
       - utm_campaign
@@ -156,6 +156,8 @@ sites:
               - prefix: https://www.dailymaverick.co.za/opinionista/
               - prefix: https://www.dailymaverick.co.za/opinion-piece
               - prefix: https://www.dailymaverick.co.za/wp-content/
+              - prefix: https://www.dailymaverick.co.za/cartoon-tag
+              - pattern: .*have-a-picture-for-you.*
     parse:
       or:
         - prefix: https://www.dailymaverick.co.za/article/
