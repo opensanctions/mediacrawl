@@ -49,12 +49,14 @@ class Task(object):
         return True
 
     def extract_urls(self, page: Page) -> Generator[URL, None, None]:
+        if page.doc is None:
+            return
         suffixes: Set[Optional[str]] = set()
         for link in page.doc.findall(".//a"):
-            suffixes.add(link.get('href'))
-            
+            suffixes.add(link.get("href"))
+
         for frame in page.doc.findall(".//iframe"):
-            suffixes.add(frame.get('src'))
+            suffixes.add(frame.get("src"))
 
         for suffix in suffixes:
             if suffix is None:
@@ -63,11 +65,8 @@ class Task(object):
             if next_url is not None:
                 yield next_url
 
-
     async def handle_page(self, page: Page) -> None:
         page.parse = False
-        if page.content is None or len(page.content) < 100:
-            return
         if not self.check_crawl(self.url, page):
             return
         if not page.ok:

@@ -106,8 +106,9 @@ class XpathRule(BaseRule):
     def check(self, url: URL, page: Optional[Page]) -> Optional[bool]:
         if page is None or not page.retrieved:
             return None
-        if page.doc.xpath(self.xpath) is not None:
-            return True
+        if page.doc is not None:
+            if page.doc.xpath(self.xpath) is not None:
+                return True
         return False
 
 
@@ -117,8 +118,9 @@ class ElementRule(BaseRule):
     def check(self, url: URL, page: Optional[Page]) -> Optional[bool]:
         if page is None or not page.retrieved:
             return None
-        if page.doc.find(self.element) is not None:
-            return True
+        if page.doc is not None:
+            if page.doc.find(self.element) is not None:
+                return True
         return False
 
 

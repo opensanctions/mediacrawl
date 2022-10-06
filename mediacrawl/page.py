@@ -1,8 +1,9 @@
-from lxml import html
+from lxml import html, etree
 from datetime import datetime
 from functools import cached_property
 from typing import AsyncGenerator, Optional
 from pydantic import BaseModel, validator
+from charset_normalizer import from_bytes
 from aiohttp import ClientResponse
 from sqlalchemy import or_, update
 from sqlalchemy.future import select
@@ -26,8 +27,36 @@ class Page(BaseModel):
     content: Optional[bytes] = None
 
     @cached_property
-    def doc(self):
-        return html.document_fromstring(self.content, base_url=self.url.url)
+    def text(self) -> Optional[str]:
+        if self.content is None or self.content.startswith(b"%PDF-"):
+            return None
+        if len(self.content) < 100:
+            return None
+        res = from_bytes(self.content)
+        match = res.best()
+        if match is not None and match.encoding is not None:
+            try:
+                return self.content.decode(match.encoding, "strict")
+            except UnicodeDecodeError:
+                pass
+        if self.charset is not None:
+            try:
+                return self.content.decode(self.charset, "strict")
+            except UnicodeDecodeError:
+                pass
+        # return self.content.decode('utf-8', 'replace')
+        return None
+
+    @cached_property
+    def doc(self) -> Optional[etree._Element]:
+        if self.content is None:
+            return None
+        if self.text is None:
+            return html.document_fromstring(self.content, base_url=self.url.url)
+        try:
+            return html.document_fromstring(self.text, base_url=self.url.url)
+        except ValueError:
+            return html.document_fromstring(self.content, base_url=self.url.url)
 
     @validator("url", "original_url")
     def convert_url(cls, url: Optional[str]) -> Optional[URL]:
@@ -81,7 +110,7 @@ class Page(BaseModel):
             yield page
 
     async def save(self, conn: Conn) -> None:
-        data = self.dict(exclude={"retrieved", "doc", "url", "original_url"})
+        data = self.dict(exclude={"retrieved", "doc", "url", "original_url", "text"})
         data["url"] = self.url.url
         data["original_url"] = self.original_url.url
         istmt = upsert(page_table).values([data])

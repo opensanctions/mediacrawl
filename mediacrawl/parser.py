@@ -4,7 +4,6 @@ import langdetect
 import languagecodes
 from pathlib import Path
 from io import BufferedWriter
-from charset_normalizer import from_bytes
 from typing import Dict, List, Optional
 from articledata import Article
 from trafilatura import bare_extraction
@@ -20,28 +19,6 @@ class Parser(object):
     def __init__(self, config: SiteConfig):
         self.config = config
 
-    def page_text(self, page: Page) -> Optional[str]:
-        if page.content is None:
-            return None
-        if len(page.content) < 100:
-            return None
-        if page.content.startswith(b"%PDF-"):
-            return None
-
-        if page.charset is not None:
-            try:
-                return page.content.decode(page.charset)
-            except UnicodeDecodeError:
-                pass
-        res = from_bytes(page.content)
-        match = res.best()
-        if match is not None and match.encoding is not None:
-            try:
-                return page.content.decode(match.encoding)
-            except UnicodeDecodeError:
-                pass
-        return page.content.decode("utf-8", errors="ignore")
-
     async def parse(self, page: Page) -> Optional[Article]:
         article = Article(
             id=page.url.id,
@@ -54,12 +31,11 @@ class Parser(object):
             text="",
             extracted_at=page.timestamp.isoformat(),
         )
-        text = self.page_text(page)
-        if text is None:
+        if page.text is None:
             return None
 
         extract: Dict[str, str] = bare_extraction(
-            text, url=page.url.url, include_comments=False
+            page.text, url=page.url.url, include_comments=False
         )
         if extract is not None:
             article.title = extract.get("title", article.title)
@@ -69,14 +45,22 @@ class Parser(object):
             if author is not None:
                 article.bylines.append(author)
 
-        lang = langdetect.detect(text)
-        if lang is not None:
-            article.locale = lang
-            lang_long = languagecodes.iso_639_alpha3(lang)
-            if lang_long is not None:
-                article.language = lang_long
+        # html = page.doc
+        # if html.get("lang") == "ru-RU":
+        #     print(page.url, page.charset)
+        #     print(article.text)
+        # print(html.get("lang"))
 
-        return article
+        return None
+
+        # lang = langdetect.detect(article.text or page.text)
+        # if lang is not None:
+        #     article.locale = lang
+        #     lang_long = languagecodes.iso_639_alpha3(lang)
+        #     if lang_long is not None:
+        #         article.language = lang_long
+
+        # return article
 
     async def run(self, outpath: Path, sites: List[str]):
         outpath.mkdir(parents=True, exist_ok=True)
