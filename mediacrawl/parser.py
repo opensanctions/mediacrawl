@@ -67,8 +67,6 @@ class Parser(object):
         handles: Dict[str, BufferedWriter] = {}
         async with engine.begin() as conn:
             async for page in Page.iter_parse(conn):
-                if len(sites) and page.site not in sites:
-                    continue
                 article = await self.parse(page)
                 if article is None:
                     continue

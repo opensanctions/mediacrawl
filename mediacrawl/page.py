@@ -1,7 +1,7 @@
 from lxml import html, etree
 from datetime import datetime
 from functools import cached_property
-from typing import AsyncGenerator, Optional
+from typing import AsyncGenerator, List, Optional
 from pydantic import BaseModel, validator
 from charset_normalizer import from_bytes
 from aiohttp import ClientResponse
@@ -100,9 +100,13 @@ class Page(BaseModel):
         return None
 
     @classmethod
-    async def iter_parse(cls, conn: Conn) -> AsyncGenerator["Page", None]:
+    async def iter_parse(
+        cls, conn: Conn, sites: List[str] = []
+    ) -> AsyncGenerator["Page", None]:
         stmt = select(page_table)
         stmt = stmt.where(page_table.c.parse == True)
+        if len(sites):
+            stmt = stmt.where(page_table.c.site.in_(sites))
         result = await conn.stream(stmt)
         async for row in result:
             page = cls.parse_obj(row)
