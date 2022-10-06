@@ -18,7 +18,6 @@ class Page(BaseModel):
     original_url: URL
     method: str = "GET"
     ok: bool = False
-    parse: bool = False
     retrieved: bool = False
     status: Optional[int] = None
     timestamp: datetime
@@ -105,7 +104,6 @@ class Page(BaseModel):
     ) -> AsyncGenerator["Page", None]:
         stmt = select(page_table)
         stmt = stmt.where(page_table.c.ok == True)
-        # stmt = stmt.where(page_table.c.parse == True)
         if len(sites):
             stmt = stmt.where(page_table.c.site.in_(sites))
         result = await conn.stream(stmt)
@@ -121,7 +119,6 @@ class Page(BaseModel):
         istmt = upsert(page_table).values([data])
         values = dict(
             ok=istmt.excluded.ok,
-            # parse=istmt.excluded.ok,
             status=istmt.excluded.status,
             content_type=istmt.excluded.content_type,
             charset=istmt.excluded.charset,

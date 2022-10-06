@@ -105,6 +105,9 @@ sites:
       and:
         - or:
             - domain: daphne.foundation
+        - not:
+            or:
+              - prefix: https://www.daphne.foundation/documents/
     parse:
       or:
         - element: .//article
