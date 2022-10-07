@@ -5,7 +5,7 @@ import languagecodes
 from normality import collapse_spaces
 from pathlib import Path
 
-model_path = Path(__file__).parent / "data/lid.176.ftz"
+model_path = Path(__file__).parent / "models/lid.176.ftz"
 
 
 @cache
