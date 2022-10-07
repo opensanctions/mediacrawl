@@ -24,10 +24,10 @@ ENV LANG="en_US.UTF-8" \
     TZ="UTC"
 
 COPY requirements.txt /tmp/requirements.txt
-RUN pip3 install --no-cache-dir -r /tmp/requirements.txt
+RUN pip3 install -r /tmp/requirements.txt
 
 COPY . /mediacrawl
-RUN pip3 install --no-cache-dir -e /mediacrawl
+RUN pip3 install -e /mediacrawl
 WORKDIR /mediacrawl
 
 CMD mediacrawl crawl sites.yml
