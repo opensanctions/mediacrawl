@@ -72,8 +72,8 @@ class Parser(object):
     async def run(self, outpath: Path, sites: List[str]):
         outpath.mkdir(parents=True, exist_ok=True)
         handles: Dict[str, BufferedWriter] = {}
-        async with engine.begin() as conn:
-            async for page in Page.iter_parse(conn):
+        async with engine.connect() as conn:
+            async for page in Page.iter_parse(conn, sites=sites):
                 article = await self.parse(page)
                 if article is None:
                     continue
