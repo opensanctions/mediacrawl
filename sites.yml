@@ -150,13 +150,17 @@ sites:
     crawl:
       and:
         - or:
-            - domain: dailymaverick.co.za
+            - pattern: https://www\.dailymaverick\.co\.za.*
         - not:
             or:
               - mime: nonweb
-              - domain: shop.dailymaverick.co.za
-              - domain: internal.dailymaverick.co.za
-              - domain: revengine-tracker.remp.dailymaverick.co.za
+              # - domain: shop.dailymaverick.co.za
+              # - domain: internal.dailymaverick.co.za
+              # - domain: local.dailymaverick.co.za
+              # - domain: www1.www.dailymaverick.co.za
+              # - domain: emma.thewww.dailymaverick.co.za
+              # - domain: firstthing.www.dailymaverick.co.za
+              # - domain: revengine-tracker.remp.dailymaverick.co.za
               - prefix: https://www.dailymaverick.co.za/opinionista/
               - prefix: https://www.dailymaverick.co.za/opinion-piece
               - prefix: https://www.dailymaverick.co.za/wp-content/
