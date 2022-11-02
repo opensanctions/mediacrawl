@@ -50,12 +50,15 @@ class Page(BaseModel):
     def doc(self) -> Optional[etree._Element]:
         if self.content is None:
             return None
-        if self.text is None:
-            return html.document_fromstring(self.content, base_url=self.url.url)
         try:
-            return html.document_fromstring(self.text, base_url=self.url.url)
-        except ValueError:
-            return html.document_fromstring(self.content, base_url=self.url.url)
+            if self.text is None:
+                return html.document_fromstring(self.content, base_url=self.url.url)
+            try:
+                return html.document_fromstring(self.text, base_url=self.url.url)
+            except ValueError:
+                return html.document_fromstring(self.content, base_url=self.url.url)
+        except etree.LxmlError:
+            return None
 
     @validator("url", "original_url")
     def convert_url(cls, url: Optional[str]) -> Optional[URL]:
