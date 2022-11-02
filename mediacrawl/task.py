@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING, Generator, Optional, Set
 from asyncio.exceptions import TimeoutError
 from aiohttp import ClientSession, ClientResponse
 from aiohttp.client_exceptions import ClientConnectionError, ClientPayloadError
+from aiohttp.client_exceptions import TooManyRedirects
 
 from mediacrawl.url import URL
 from mediacrawl.page import Page
@@ -112,13 +113,13 @@ class Task(object):
 
         async with self.site.delay_url(self.url):
             try:
-                async with http.get(self.url.url) as response:
+                async with http.get(self.url.url, max_redirects=3) as response:
                     if response.status > 299:
                         return
                     log.info("Crawl [%d]: %r", response.status, self.url)
                     page = Page.from_response(self.site.config.name, self.url, response)
                     await self.retrieve_content(page, response)
-            except (ClientConnectionError, TimeoutError) as ce:
+            except (ClientConnectionError, TimeoutError, TooManyRedirects) as ce:
                 log.error("Error [%r]: %r", self, ce)
                 return
 

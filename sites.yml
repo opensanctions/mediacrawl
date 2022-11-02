@@ -53,6 +53,8 @@ sites:
               - domain: dev.icij.org
               - domain: datashare.icij.org
               - domain: donate.icij.org
+              - domain: cloudfront-4.icij.org
+              - domain: wwww.icij.org
     parse:
       or:
         - element: .//time[@class="post-published"]
@@ -153,6 +155,7 @@ sites:
             or:
               - mime: nonweb
               - domain: shop.dailymaverick.co.za
+              - domain: internal.dailymaverick.co.za
               - domain: revengine-tracker.remp.dailymaverick.co.za
               - prefix: https://www.dailymaverick.co.za/opinionista/
               - prefix: https://www.dailymaverick.co.za/opinion-piece
