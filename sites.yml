@@ -147,6 +147,7 @@ sites:
       - utm_campaign
       - utm_medium
       - __cf_chl_captcha_tk__
+      - __twitter_impression
     crawl:
       and:
         - or:
@@ -168,7 +169,9 @@ sites:
               - pattern: .*have-a-picture-for-you.*
     parse:
       or:
-        - prefix: https://www.dailymaverick.co.za/article/
+        - prefix: https://www.dailymaverick.co.za/article/2022
+        - prefix: https://www.dailymaverick.co.za/article/2021
+        - prefix: https://www.dailymaverick.co.za/article/2020
         - element: .//div[@class="author-bar"]
 
   - name: amabhungane
