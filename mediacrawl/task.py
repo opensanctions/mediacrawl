@@ -4,8 +4,8 @@ from asyncio.exceptions import TimeoutError
 from aiohttp import ClientSession, ClientResponse
 from aiohttp.client_exceptions import ClientConnectionError, ClientPayloadError
 from aiohttp.client_exceptions import TooManyRedirects
+from articledata import URL
 
-from mediacrawl.url import URL
 from mediacrawl.page import Page
 from mediacrawl.db import db_connect
 

@@ -1,9 +1,9 @@
 from typing import List, Optional, Set
 from pydantic import BaseModel, validator
 from pydantic_yaml import YamlModel
+from articledata import URL
 
 from mediacrawl.rule import Rules
-from mediacrawl.url import URL
 
 
 class SiteConfig(BaseModel):

@@ -5,10 +5,10 @@ from typing import AsyncGenerator, List, Optional
 from pydantic import BaseModel, validator
 from charset_normalizer import from_bytes
 from aiohttp import ClientResponse
-from sqlalchemy import or_, update
+from sqlalchemy import or_
 from sqlalchemy.future import select
+from articledata import URL
 
-from mediacrawl.url import URL
 from mediacrawl.db import Conn, page_table, upsert
 
 

@@ -4,10 +4,11 @@ from asyncio import CancelledError, Queue
 from typing import List, Set
 from aiohttp import ClientSession, TCPConnector
 from aiohttp.client import ClientTimeout
+from articledata import URL
+
 from mediacrawl.config import CrawlConfig
 from mediacrawl.site import Site
 from mediacrawl.task import Task
-from mediacrawl.url import URL
 
 log = logging.getLogger(__name__)
 

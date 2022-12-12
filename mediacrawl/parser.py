@@ -10,7 +10,6 @@ from mediacrawl.config import CrawlConfig, SiteConfig
 from mediacrawl.language import detect_language
 from mediacrawl.page import Page
 from mediacrawl.db import engine
-from mediacrawl.url import URL
 
 log = logging.getLogger(__name__)
 
@@ -41,7 +40,7 @@ class Parser(object):
         log.info("Parsing: %r", page.url)
         article = Article(
             id=page.url.id,
-            url=page.url.url,
+            url=page.url,
             title=page.url.url,
             site=page.site,
             bylines=[],

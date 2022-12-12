@@ -3,10 +3,10 @@ import asyncio
 from asyncio import Semaphore
 from contextlib import asynccontextmanager
 from typing import TYPE_CHECKING, AsyncGenerator, Dict, Generator
+from articledata import URL
 
 from mediacrawl.config import SiteConfig
 from mediacrawl.task import Task
-from mediacrawl.url import URL
 
 if TYPE_CHECKING:
     from mediacrawl.crawler import Crawler
