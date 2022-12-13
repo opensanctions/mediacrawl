@@ -79,7 +79,9 @@ class Parser(object):
                 if article.site not in handles:
                     path = outpath.joinpath(f"{article.site}.ijson")
                     handles[article.site] = open(path, "wb")
-                line = orjson.dumps(article.dict(), option=orjson.OPT_APPEND_NEWLINE)
+                data = article.dict()
+                data["url"] = article.url.url
+                line = orjson.dumps(data, option=orjson.OPT_APPEND_NEWLINE)
                 handles[article.site].write(line)
 
         for fh in handles.values():
